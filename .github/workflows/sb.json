@@ -621,76 +621,40 @@
         "update_interval": "1d"
       },
       {
-        "tag": "cfnat_list",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/cmliu/ACL4SSR/refs/heads/main/Clash/CFnat.list",
-        "download_detour": "DIRECT",
-        "update_interval": "1d"
-      },
-      {
-        "tag": "lan_list",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list",
-        "download_detour": "DIRECT",
-        "update_interval": "1d"
-      },
-      {
         "tag": "china_domain",
         "type": "remote",
         "format": "binary",
         "url": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaDomain.list",
         "download_detour": "DIRECT",
         "update_interval": "1d"
-      },
-      {
-        "tag": "china_company_ip",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaCompanyIp.list",
-        "download_detour": "DIRECT",
-        "update_interval": "1d"
       }
     ],
-    "rules": [
-      {
-        "protocol": "dns",
-        "outbound": "DIRECT"
-      },
-      {
-        "clash_mode": "direct",
-        "outbound": "DIRECT"  
-      },
-      {
-        "clash_mode": "global",
-        "outbound": "🚀 节点选择"
-      },
-      {
-        "rule_set": "proxy_list",
-        "outbound": "🚀 节点选择"
-      },
-      {
-        "rule_set": "cfnat_list",
-        "outbound": "🎯 全球直连"
-      },
-      {
-        "rule_set": "lan_list",
-        "outbound": "🎯 全球直连"
-      },
-      {
-        "rule_set": "china_domain",
-        "outbound": "🎯 全球直连"
-      },
-      {
-        "rule_set": "china_company_ip",
-        "outbound": "🎯 全球直连"
-      },
-      {
-        "geoip": "cn",
-        "outbound": "🎯 全球直连"
-      }
-    ],
+"rules": [
+    {
+      "protocol": "dns",
+      "outbound": "DIRECT"
+    },
+    {
+      "clash_mode": "direct",
+      "outbound": "DIRECT"  
+    },
+    {
+      "clash_mode": "global",
+      "outbound": "🚀 节点选择"
+    },
+    {
+      "rule_set": "proxy_list",
+      "outbound": "🚀 节点选择"
+    },
+    {
+      "rule_set": "china_domain",
+      "outbound": "🎯 全球直连"
+    },
+    {
+      "geoip": "cn",
+      "outbound": "🎯 全球直连"
+    }
+  ],
     "auto_detect_interface": true,
     "final": "🚀 节点选择"
   },
