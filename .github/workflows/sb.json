@@ -20,6 +20,7 @@
         "address": "https://cloudflare-dns.com/dns-query",
         "strategy": "ipv4_only",
         "detour": "DIRECT"
+        "address_resolver": "dns_resolver"
       },
       {
         "tag": "dns_success",
