@@ -75,7 +75,7 @@
     {
       "type": "tun",
       "tag": "tun-in",
-      "address": ["172.19.0.1/30", "fd00::1/126"],
+      "address": "172.19.0.1/30",
       "auto_route": true,
       "strict_route": true,
       "stack": "mixed",
@@ -608,28 +608,9 @@
         "insecure": true
       },
       "obfs": {}
-    },
-  ],
-  "route": {
-  "rule_set": [
-    {
-      "tag": "proxy_list",
-      "type": "remote",
-      "format": "source", 
-      "url": "https://raw.githubusercontent.com/heymenshan-tech/ACL4SSR/refs/heads/main/proxy.list",
-      "download_detour": "DIRECT",
-      "update_interval": "1d"
-    },
-    {
-      "tag": "china_domain",
-      "type": "remote",
-      "format": "source",
-      "url": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaDomain.list",
-      "download_detour": "DIRECT",
-      "update_interval": "1d"
     }
   ],
-"route": {
+  "route": {
   "rules": [
     {
       "protocol": "dns",
