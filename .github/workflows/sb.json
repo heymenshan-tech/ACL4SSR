@@ -2,61 +2,12 @@
   "dns": {
     "servers": [
       {
-        "tag": "dns_proxy",
-        "address": "https://dns.google/dns-query",
-        "address_resolver": "dns_resolver",
-        "strategy": "ipv4_only",
-        "detour": "🚀 节点选择"
-      },
-      {
-        "tag": "dns_direct",
-        "address": "tcp://1.1.1.1",
-        "address_resolver": "dns_resolver",
-        "strategy": "ipv4_only",
-        "detour": "DIRECT"
-      },
-      {
-        "tag": "dns_resolver",
+        "tag": "dns",
         "address": "8.8.8.8",
-        "strategy": "ipv4_only",
         "detour": "DIRECT"
-      },
-      {
-        "tag": "dns_success",
-        "address": "rcode://success"
-      },
-      {
-        "tag": "dns_refused",
-        "address": "rcode://refused"
-      },
-      {
-        "tag": "dns_fakeip",
-        "address": "fakeip"
       }
     ],
-    "rules": [
-      {
-        "outbound": "any",
-        "server": "dns_resolver"
-      },
-      {
-        "query_type": [
-          "A",
-          "AAAA",
-          "CNAME"
-        ],
-        "invert": true,
-        "server": "dns_refused",
-        "disable_cache": true
-      }
-    ],
-    "final": "dns_direct",
-    "independent_cache": true,
-    "fakeip": {
-      "enabled": true,
-      "inet4_range": "198.18.0.0/15",
-      "inet6_range": "fc00::/18"
-    }
+    "final": "dns"
   },
   "ntp": {
     "enabled": true,
