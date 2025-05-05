@@ -629,7 +629,8 @@
       "update_interval": "1d"
     }
   ],
-"rules": [
+"route": {
+  "rules": [
     {
       "protocol": "dns",
       "outbound": "DIRECT"
@@ -643,11 +644,7 @@
       "outbound": "🚀 节点选择"
     },
     {
-      "rule_set": "proxy_list",
-      "outbound": "🚀 节点选择"
-    },
-    {
-      "rule_set": "china_domain",
+      "domain_suffix": [".cn"],
       "outbound": "🎯 全球直连"
     },
     {
