@@ -17,9 +17,8 @@
       },
       {
         "tag": "dns_resolver",
-        "address": "https://cloudflare-dns.com/dns-query",
+        "address": "8.8.8.8",
         "strategy": "ipv4_only",
-        "address_resolver": "dns_resolver",
         "detour": "DIRECT"
       },
       {
