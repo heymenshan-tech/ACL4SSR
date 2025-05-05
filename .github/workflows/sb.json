@@ -77,8 +77,8 @@
       "tag": "tun-in",
       "address": ["172.19.0.1/30"],
       "auto_route": true,
-      "strict_route": true,
-      "stack": "mixed",
+      "strict_route": false,
+      "stack": "system",
       "sniff": true
     }
   ],
@@ -612,34 +612,29 @@
   ],
   "route": {
   "rules": [
-    {
-      "protocol": "dns",
-      "outbound": "DIRECT"
-    },
-    {
-      "clash_mode": "direct",
-      "outbound": "DIRECT"  
-    },
-    {
-      "clash_mode": "global",
-      "outbound": "🚀 节点选择"
-    },
-    {
-      "domain_suffix": [".cn"],
-      "outbound": "🎯 全球直连"
-    },
-    {
-      "geoip": "cn",
-      "outbound": "🎯 全球直连"
-    }
-  ],
-    "auto_detect_interface": true,
-    "final": "🚀 节点选择"
+      {
+        "protocol": "dns",
+        "outbound": "DIRECT"
+      },
+      {
+        "clash_mode": "direct",
+        "outbound": "DIRECT"  
+      },
+      {
+        "clash_mode": "global",
+        "outbound": "🚀 节点选择"
+      },
+      {
+        "domain_suffix": [".cn"],
+        "outbound": "🎯 全球直连"
+      },
+      {
+        "geoip": "cn",
+        "outbound": "🎯 全球直连"
+      }
+    ],
+      "auto_detect_interface": true,
+      "final": "🚀 节点选择"
   },
-  "experimental": {
-    "cache_file": {
-      "enabled": true,
-      "store_fakeip": true
-    }
   }
 }
