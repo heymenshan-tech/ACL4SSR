@@ -592,54 +592,9 @@
       },
       "obfs": {}
     },
-    {
-      "type": "selector",
-      "tag": "🏠 私有网络",
-      "outbounds": [
-        "🚀 节点选择",
-        "DIRECT",
-        "REJECT",
-        "⚡ 自动选择",
-        "US_bandwagon_01",
-        "US_bandwagon_02_argo",
-        "US_bandwagon_03",
-        "US_bandwagon_04",
-        "JP_01_Argo",
-        "JP_02",
-        "KO_01",
-        "KO_02",
-        "KO_03",
-        "JPN_01",
-        "JPN_02",
-        "JPN_03",
-        "US_cloudcone_01_Argo",
-        "US_cloudcone_02",
-        "US_cloudcone_03",
-        "KR_01_Argo",
-        "KR_02",
-        "KR_03",
-        "US_racknerd_01",
-        "US_racknerd_02",
-        "US_racknerd_03",
-        "DE_01",
-        "DE_02"
-      ]
-    },
   ],
   "route": {
     "rule_set": [
-      {
-        "tag": "private-ip",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://gh.sageer.me/https://raw.githubusercontent.com/lyc8503/sing-box-rules/refs/heads/rule-set-geoip/geoip-private.srs"
-      },
-      {
-        "tag": "cn-ip",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://gh.sageer.me/https://raw.githubusercontent.com/lyc8503/sing-box-rules/refs/heads/rule-set-geoip/geoip-cn.srs"
-      }
     ],
     "rules": [
       {
@@ -653,12 +608,6 @@
       {
         "clash_mode": "global",
         "outbound": "🚀 节点选择"
-      },
-      {
-        "rule_set": [
-          "private-ip"
-        ],
-        "outbound": "🏠 私有网络"
       },
     ],
     "auto_detect_interface": true,
