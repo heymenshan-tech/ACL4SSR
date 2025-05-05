@@ -691,12 +691,6 @@
         ],
         "outbound": "🏠 私有网络"
       },
-      {
-        "rule_set": [
-          "cn-ip"
-        ],
-        "outbound": "🔒 国内服务"
-      }
     ],
     "auto_detect_interface": true,
     "final": "🐟 漏网之鱼"
