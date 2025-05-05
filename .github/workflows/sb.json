@@ -598,7 +598,7 @@
     "rules": [
       {
         "protocol": "dns",
-        "outbound": "dns-out"
+        "outbound": "DIRECT"
       },
       {
         "clash_mode": "direct",
