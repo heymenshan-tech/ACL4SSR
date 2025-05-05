@@ -24,6 +24,7 @@
       {
         "tag": "dns_resolver2",
         "address": "https://cloudflare-dns.com/dns-query",
+        "address_resolver": "dns_resolver"
         "strategy": "ipv4_only",
         "detour": "DIRECT"
       },
