@@ -17,7 +17,7 @@
       },
       {
         "tag": "dns_resolver",
-        "address": "8.8.8.8",
+        "address": "local",
         "detour": "DIRECT"
       },
       {
