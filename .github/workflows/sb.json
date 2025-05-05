@@ -611,24 +611,24 @@
     },
   ],
   "route": {
-    "rule_set": [
-      {
-        "tag": "proxy_list",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/heymenshan-tech/ACL4SSR/refs/heads/main/proxy.list",
-        "download_detour": "DIRECT",
-        "update_interval": "1d"
-      },
-      {
-        "tag": "china_domain",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaDomain.list",
-        "download_detour": "DIRECT",
-        "update_interval": "1d"
-      }
-    ],
+  "rule_set": [
+    {
+      "tag": "proxy_list",
+      "type": "remote",
+      "format": "source", 
+      "url": "https://raw.githubusercontent.com/heymenshan-tech/ACL4SSR/refs/heads/main/proxy.list",
+      "download_detour": "DIRECT",
+      "update_interval": "1d"
+    },
+    {
+      "tag": "china_domain",
+      "type": "remote",
+      "format": "source",
+      "url": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaDomain.list",
+      "download_detour": "DIRECT",
+      "update_interval": "1d"
+    }
+  ],
 "rules": [
     {
       "protocol": "dns",
