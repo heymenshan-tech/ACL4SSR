@@ -3,19 +3,28 @@
     "servers": [
       {
         "tag": "dns_proxy",
-        "address": "dot://dns.google",
+        "address": "https://dns.google/dns-query",
+        "address_resolver": "dns_resolver",
         "strategy": "ipv4_only",
         "detour": "🚀 节点选择"
       },
       {
         "tag": "dns_direct",
         "address": "tcp://1.1.1.1",
+        "address_resolver": "dns_resolver",
         "strategy": "ipv4_only",
         "detour": "DIRECT"
       },
       {
         "tag": "dns_resolver",
-        "address": "local",
+        "address": "udp://1.1.1.1",
+        "strategy": "ipv4_only",
+        "detour": "DIRECT"
+      },
+      {
+        "tag": "dns_resolver2",
+        "address": "https://cloudflare-dns.com/dns-query",
+        "strategy": "ipv4_only",
         "detour": "DIRECT"
       },
       {
@@ -151,7 +160,7 @@
     },
     {
       "type": "dns",
-      "tag": "dns-out"
+      "tag": "dns_proxy"
     },
     {
       "type": "vless",
