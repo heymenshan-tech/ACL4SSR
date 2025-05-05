@@ -3,11 +3,13 @@
     "servers": [
       {
         "tag": "dns",
-        "address": "8.8.8.8",
-        "detour": "DIRECT"
+        "address": "8.8.8.8"
       }
     ],
-    "final": "dns"
+    "final": "dns",
+    "fakeip": {
+      "enabled": false
+    }
   },
   "ntp": {
     "enabled": true,
@@ -28,9 +30,9 @@
       "tag": "tun-in",
       "address": ["172.19.0.1/30"],
       "auto_route": true,
-      "strict_route": false,
+      "strict_route": true,
       "stack": "system",
-      "sniff": true
+      "sniff": false
     }
   ],
   "outbounds": [
