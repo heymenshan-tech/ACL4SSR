@@ -1,9 +1,4 @@
 {
-  "log": {
-    "disabled": false,
-    "level": "info",
-    "timestamp": true
-  },
   "dns": {
     "servers": [
       {
@@ -18,24 +13,6 @@
         "address_strategy": "ipv4_only",
         "strategy": "ipv4_only",
         "client_subnet": "1.0.1.0"
-      }
-    ],
-    "rules": [
-      {
-        "outbound": "any",
-        "server": "default-dns"
-      },
-      {
-        "clash_mode": "direct",
-        "server": "default-dns"
-      },
-      {
-        "clash_mode": "global",
-        "server": "google"
-      },
-      {
-        "rule_set": "cnsite",
-        "server": "default-dns"
       }
     ],
     "strategy": "ipv4_only",
