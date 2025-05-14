@@ -1,132 +1,434 @@
 {
-"log":{"disabled":false,"level":"info","timestamp":true},
-
+  "log": {"disabled": false, "level": "info", "timestamp": true},
   "dns": {
     "servers": [
       {
-        "tag": "default-dns",
-        "address": "tls://1.1.1.1",
-        "detour": "direct-out"
+        "tag"             : "dns_proxy"    ,
+        "address"         : "tls://1.1.1.1",
+        "address_resolver": "dns_resolver"
       },
       {
-        "tag": "google",
-        "address": "https://dns.google/dns-query",
-        "address_resolver": "default-dns",
-        "address_strategy": "ipv4_only",
-	"strategy": "ipv4_only",
-        "client_subnet": "1.0.1.0"
-      }
+        "tag"             : "dns_direct"                   ,
+        "address"         : "h3://dns.alidns.com/dns-query",
+        "address_resolver": "dns_resolver"                 ,
+        "detour"          : "DIRECT"
+      },
+      {"tag": "dns_resolver", "address": "1.1.1.1", "detour": "DIRECT"}
     ],
     "rules": [
-      {
-        "outbound": "any",
-        "server": "default-dns"
-      },
-      {
-        "clash_mode": "direct",
-        "server": "default-dns"
-      },
-      {
-        "clash_mode": "global",
-        "server": "google"
-      },
-      {
-        "rule_set": "cnsite",
-        "server": "default-dns"
-      }
+      { "outbound": ["any"], "server": "dns_resolver" }
     ],
-    "strategy": "ipv4_only",
-    "final": "google"
-    },
-
+    "final": "dns_proxy",
+    "independent_cache": true,
+    "fakeip": {"enabled": true, "inet4_range": "198.18.0.0/15"}
+  },
+  "ntp": {
+    "enabled": true,
+    "server": "time.apple.com",
+    "server_port": 123,
+    "interval": "30m",
+    "detour": "DIRECT"
+  },
   "inbounds": [
     {
-      "type": "direct",
-      "tag": "dns-in",
-      "listen": "::",
-      "listen_port": 5333
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "0.0.0.0",
+      "listen_port": 2080
     },
-    {
-      "type": "redirect",
-      "listen": "::",
-      "listen_port": 5331,
-      "sniff": true,
-	"sniff_override_destination": false
-    }
+ {
+  "type": "tun",
+  "tag": "tun-in",
+  "address": ["172.19.0.1/30"],
+  "auto_route": true,
+  "strict_route": true,
+  "stack": "mixed",
+  "sniff": true
+}
   ],
   "outbounds": [
+    {"type": "direct", "tag": "DIRECT"},
     {
-      "type": "direct",
-      "tag": "direct-out"
-	},
-{
-      "type": "block",
-      "tag": "block-out"
-	},
+      "type": "vless",
+      "tag": "US_LA_01",
+      "server": "67.230.172.128",
+      "server_port": 43005,
+      "uuid": "46f6cb9c-dd20-4d28-9da7-db9d2529a3bb",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.yahoo.com",
+        "insecure": true,
+        "utls": {"enabled": true, "fingerprint": "chrome"},
+        "reality": {
+          "enabled": true,
+          "public_key": "sf-F6ZIUze5hHQxUja9BkAt-sAQ2ACCt5kYxWFspDik",
+          "short_id": "94dba517"
+        }
+      },
+      "tcp_fast_open": false
+    },
     {
-      "type": "dns",
-      "tag": "dns-out"
-	},
-{
-"type": "urltest",
-      "tag": "自动选择",
-      "outbounds": ["🇸🇬 ———更新日期：2025.05.09———","US_LA_01","US_LA_02","US_LA_03","KO_01","KO_02","JPN_01","JPN_02","DE_LS_01","DE_LS_02","Google_vmess_zero_trust_01","Google_vmess_zero_trust_02","Google_vmess_zero_trust_03","Google_vmess_zero_trust_04"]},
-
-{
-"type": "selector",
-      "tag": "手动选择",
-      "outbounds": ["direct-out","block-out","🇸🇬 ———更新日期：2025.05.09———","US_LA_01","US_LA_02","US_LA_03","KO_01","KO_02","JPN_01","JPN_02","DE_LS_01","DE_LS_02","Google_vmess_zero_trust_01","Google_vmess_zero_trust_02","Google_vmess_zero_trust_03","Google_vmess_zero_trust_04"]},
-
-{
-"type": "selector",
-      "tag": "GLOBAL",
-      "outbounds": ["🇸🇬 ———更新日期：2025.05.09———","US_LA_01","US_LA_02","US_LA_03","KO_01","KO_02","JPN_01","JPN_02","DE_LS_01","DE_LS_02","Google_vmess_zero_trust_01","Google_vmess_zero_trust_02","Google_vmess_zero_trust_03","Google_vmess_zero_trust_04"]},
-
-
-{"type":"tuic","tag":"🇸🇬 ———更新日期：2025.05.09———","server":"54.92.80.253","server_port":48755,"password":"7f951532-dd6c-463f-99f0-d80bf762d37c","uuid":"7f951532-dd6c-463f-99f0-d80bf762d37c","tls":{"enabled":true,"insecure":true,"server_name":"www.bing.com","alpn":["h3"]},"congestion_control":"bbr","udp_relay_mode":"native","tcp_fast_open":false},{"type":"vless","tag":"US_LA_01","server":"67.230.172.128","server_port":43005,"uuid":"46f6cb9c-dd20-4d28-9da7-db9d2529a3bb","flow":"xtls-rprx-vision","tls":{"enabled":true,"server_name":"www.yahoo.com","insecure":true,"utls":{"enabled":true,"fingerprint":"chrome"},"reality":{"enabled":true,"public_key":"sf-F6ZIUze5hHQxUja9BkAt-sAQ2ACCt5kYxWFspDik","short_id":"94dba517"}},"tcp_fast_open":false},{"type":"hysteria2","tag":"US_LA_02","server":"67.230.172.128","server_port":16352,"password":"46f6cb9c-dd20-4d28-9da7-db9d2529a3bb","tls":{"enabled":true,"server_name":"www.bing.com","alpn":["h3"],"insecure":true},"tcp_fast_open":false},{"type":"tuic","tag":"US_LA_03","server":"67.230.172.128","server_port":25275,"password":"46f6cb9c-dd20-4d28-9da7-db9d2529a3bb","uuid":"46f6cb9c-dd20-4d28-9da7-db9d2529a3bb","tls":{"enabled":true,"insecure":true,"server_name":"www.bing.com","alpn":["h3"]},"congestion_control":"bbr","udp_relay_mode":"native","tcp_fast_open":false},{"type":"vless","tag":"KO_01","server":"13.125.94.238","server_port":27018,"uuid":"394200f8-e6b2-46d9-9c72-d820e01e42a5","flow":"xtls-rprx-vision","tls":{"enabled":true,"server_name":"www.yahoo.com","insecure":true,"utls":{"enabled":true,"fingerprint":"chrome"},"reality":{"enabled":true,"public_key":"PBBZ7GsalxVujT9C8S3A6JPs-1meaJZ11uLv_eosAis","short_id":"3e7482c1"}},"tcp_fast_open":false},{"type":"hysteria2","tag":"KO_02","server":"13.125.94.238","server_port":40071,"password":"394200f8-e6b2-46d9-9c72-d820e01e42a5","tls":{"enabled":true,"insecure":true},"tcp_fast_open":false},{"type":"vless","tag":"JPN_01","server":"54.92.80.253","server_port":48752,"uuid":"7f951532-dd6c-463f-99f0-d80bf762d37c","flow":"xtls-rprx-vision","tls":{"enabled":true,"server_name":"www.yahoo.com","insecure":true,"utls":{"enabled":true,"fingerprint":"chrome"},"reality":{"enabled":true,"public_key":"k5C7N6ATRJGpJPzK5ca5v833gVvtpSG72tIuoZhFEH8","short_id":"51a3e57a"}},"tcp_fast_open":false},{"type":"hysteria2","tag":"JPN_02","server":"54.92.80.253","server_port":48754,"password":"7f951532-dd6c-463f-99f0-d80bf762d37c","tls":{"enabled":true,"server_name":"www.bing.com","insecure":true},"tcp_fast_open":false},{"type":"vless","tag":"DE_LS_01","server":"3.79.47.98","server_port":25196,"uuid":"fb9fefc6-7d7d-4788-bb86-ec01e98f8240","flow":"xtls-rprx-vision","tls":{"enabled":true,"server_name":"www.yahoo.com","insecure":true,"utls":{"enabled":true,"fingerprint":"chrome"},"reality":{"enabled":true,"public_key":"5fgYzWjsLNZrmiyg0on5WWEMeFAGS8w86XprCnAX7G4","short_id":"4b77e6ac"}},"tcp_fast_open":false},{"type":"hysteria2","tag":"DE_LS_02","server":"3.79.47.98","server_port":62024,"password":"fb9fefc6-7d7d-4788-bb86-ec01e98f8240","tls":{"enabled":true,"server_name":"www.bing.com","alpn":["h3"],"insecure":true},"tcp_fast_open":false},{"type":"vmess","tag":"Google_vmess_zero_trust_01","server":"104.16.0.0","server_port":443,"uuid":"dfd6a87a-df0e-4080-b772-c9850d38c7a8","alter_id":0,"security":"auto","transport":{"type":"ws","path":"/dfd6a87a-df0e-4080-b772-c9850d38c7a8-vm?ed=2048","headers":{"Host":"aaa.cjmom.us"}},"tls":{"enabled":true,"server_name":"aaa.cjmom.us","insecure":true},"tcp_fast_open":false},{"type":"vmess","tag":"Google_vmess_zero_trust_02","server":"104.17.0.0","server_port":8443,"uuid":"dfd6a87a-df0e-4080-b772-c9850d38c7a8","alter_id":0,"security":"auto","transport":{"type":"ws","path":"/dfd6a87a-df0e-4080-b772-c9850d38c7a8-vm?ed=2048","headers":{"Host":"aaa.cjmom.us"}},"tls":{"enabled":true,"server_name":"aaa.cjmom.us","insecure":true},"tcp_fast_open":false},{"type":"vmess","tag":"Google_vmess_zero_trust_03","server":"104.22.0.0","server_port":8080,"uuid":"dfd6a87a-df0e-4080-b772-c9850d38c7a8","alter_id":0,"security":"auto","transport":{"type":"ws","path":"/dfd6a87a-df0e-4080-b772-c9850d38c7a8-vm?ed=2048","headers":{"Host":"aaa.cjmom.us"}},"tcp_fast_open":false},{"type":"vmess","tag":"Google_vmess_zero_trust_04","server":"104.24.0.0","server_port":8880,"uuid":"dfd6a87a-df0e-4080-b772-c9850d38c7a8","alter_id":0,"security":"auto","transport":{"type":"ws","path":"/dfd6a87a-df0e-4080-b772-c9850d38c7a8-vm?ed=2048","headers":{"Host":"aaa.cjmom.us"}},"tcp_fast_open":false}
+      "type": "hysteria2",
+      "tag": "US_LA_02",
+      "server": "67.230.172.128",
+      "server_port": 16352,
+      "password": "46f6cb9c-dd20-4d28-9da7-db9d2529a3bb",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.bing.com",
+        "alpn": ["h3"],
+        "insecure": true
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "type": "tuic",
+      "tag": "US_LA_03",
+      "server": "67.230.172.128",
+      "server_port": 25275,
+      "password": "46f6cb9c-dd20-4d28-9da7-db9d2529a3bb",
+      "uuid": "46f6cb9c-dd20-4d28-9da7-db9d2529a3bb",
+      "tls": {
+        "enabled": true,
+        "insecure": true,
+        "server_name": "www.bing.com",
+        "alpn": ["h3"]
+      },
+      "congestion_control": "bbr",
+      "udp_relay_mode": "native",
+      "tcp_fast_open": false
+    },
+    {
+      "type": "vless",
+      "tag": "KO_01",
+      "server": "13.125.94.238",
+      "server_port": 27018,
+      "uuid": "394200f8-e6b2-46d9-9c72-d820e01e42a5",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.yahoo.com",
+        "insecure": true,
+        "utls": {"enabled": true, "fingerprint": "chrome"},
+        "reality": {
+          "enabled": true,
+          "public_key": "PBBZ7GsalxVujT9C8S3A6JPs-1meaJZ11uLv_eosAis",
+          "short_id": "3e7482c1"
+        }
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "type": "hysteria2",
+      "tag": "KO_02",
+      "server": "13.125.94.238",
+      "server_port": 40071,
+      "password": "394200f8-e6b2-46d9-9c72-d820e01e42a5",
+      "tls": {"enabled": true, "insecure": true},
+      "tcp_fast_open": false
+    },
+    {
+      "type": "vless",
+      "tag": "JPN_01",
+      "server": "54.92.80.253",
+      "server_port": 48752,
+      "uuid": "7f951532-dd6c-463f-99f0-d80bf762d37c",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.yahoo.com",
+        "insecure": true,
+        "utls": {"enabled": true, "fingerprint": "chrome"},
+        "reality": {
+          "enabled": true,
+          "public_key": "k5C7N6ATRJGpJPzK5ca5v833gVvtpSG72tIuoZhFEH8",
+          "short_id": "51a3e57a"
+        }
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "type": "hysteria2",
+      "tag": "JPN_02",
+      "server": "54.92.80.253",
+      "server_port": 48754,
+      "password": "7f951532-dd6c-463f-99f0-d80bf762d37c",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.bing.com",
+        "insecure": true
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "type": "vless",
+      "tag": "DE_LS_01",
+      "server": "3.79.47.98",
+      "server_port": 25196,
+      "uuid": "fb9fefc6-7d7d-4788-bb86-ec01e98f8240",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.yahoo.com",
+        "insecure": true,
+        "utls": {"enabled": true, "fingerprint": "chrome"},
+        "reality": {
+          "enabled": true,
+          "public_key": "5fgYzWjsLNZrmiyg0on5WWEMeFAGS8w86XprCnAX7G4",
+          "short_id": "4b77e6ac"
+        }
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "type": "hysteria2",
+      "tag": "DE_LS_02",
+      "server": "3.79.47.98",
+      "server_port": 62024,
+      "password": "fb9fefc6-7d7d-4788-bb86-ec01e98f8240",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.bing.com",
+        "alpn": ["h3"],
+        "insecure": true
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "type": "selector",
+      "tag": "🚀 节点选择",
+      "outbounds": [
+        "🚀 自动测速" , "US_LA_01", "US_LA_02", "US_LA_03", "KO_01"   , "KO_02"   ,
+        "JPN_01"  , "JPN_02"  , "DE_LS_01", "DE_LS_02"
+      ]
+    },
+    {
+      "type": "urltest",
+      "tag": "🚀 自动测速",
+      "outbounds": [
+        "US_LA_01", "US_LA_02", "US_LA_03", "KO_01"   , "KO_02"   , "JPN_01"  ,
+        "JPN_02"  , "DE_LS_01", "DE_LS_02"
+      ],
+      "url": "http://www.gstatic.com/generate_204",
+      "interval": "5m",
+      "tolerance": 50
+    },
+    {
+      "type": "selector",
+      "tag": "🎯 全球直连",
+      "outbounds": [
+        "DIRECT"  , "US_LA_01", "US_LA_02", "US_LA_03", "KO_01"   , "KO_02"   ,
+        "JPN_01"  , "JPN_02"  , "DE_LS_01", "DE_LS_02"
+      ]
+    },
+    { "type": "selector", "tag": "GLOBAL", "outbounds": ["🚀 节点选择"] }
   ],
-
-
+  "route": {
     "rules": [
+      {"action": "sniff"},
+      {"protocol": "dns", "action": "hijack-dns"},
+      {"clash_mode": "Global", "outbound": "GLOBAL"},
+      {"clash_mode": "Direct", "outbound": "DIRECT"},
       {
-        "inbound": "dns-in",
-        "outbound": "dns-out"
-      },
-      {
-        "protocol": "dns",
-        "outbound": "dns-out"
-      },
-      {
-        "clash_mode": "direct",
-        "outbound": "direct-out"
-      },
-      {
-        "clash_mode": "global",
-        "outbound": "GLOBAL"
-      },
-      {
-        "rule_set": [
-          	"cnip",
-		"cnsite"
+        "domain_suffix": [
+          "chime.aws"      , "acl4.ssr"       , "ip6-localhost"  ,
+          "ip6-loopback"   , "lan"            , "local"          ,
+          "localhost"      , "hiwifi.com"     , "leike.cc"       ,
+          "miwifi.com"     , "my.router"      , "p.to"           ,
+          "peiluyou.com"   , "phicomm.me"     , "router.ctc"     ,
+          "routerlogin.com", "tendawifi.com"  , "tplogin.cn"     ,
+          "wifi.cmcc"
         ],
-        "outbound": "direct-out"
+        "ip_cidr": [
+          "99.77.128.0/18", "0.0.0.0/8"     , "10.0.0.0/8"    ,
+          "100.64.0.0/10" , "127.0.0.0/8"   , "172.16.0.0/12" ,
+          "192.168.0.0/16", "198.18.0.0/16" , "224.0.0.0/4"
+        ],
+        "domain": [
+          "instant.arubanetworks.com",
+          "setmeup.arubanetworks.com",
+          "router.asus.com"          ,
+          "www.asusrouter.com"
+        ],
+        "outbound": "🎯 全球直连"
+      },
+      {
+        "domain_suffix": [
+          "googletraveladservices.com"         ,
+          "tracking-protection.cdn.mozilla.net"
+        ],
+        "domain": [
+          "dl.google.com"        ,
+          "origin-a.akamaihd.net",
+          "fairplay.l.qq.com"    ,
+          "livew.l.qq.com"       ,
+          "vd.l.qq.com"          ,
+          "errlog.umeng.com"     ,
+          "msg.umeng.com"        ,
+          "msg.umengcloud.com"   ,
+          "tracking.miui.com"    ,
+          "app.adjust.com"       ,
+          "bdtj.tagtic.cn"       ,
+          "rewards.hypixel.net"
+        ],
+        "outbound": "🎯 全球直连"
+      },
+      {
+        "domain_suffix": [
+          "naver.com"  , "jw.org"     , "jwpub.org"  , "jwevent.org",
+          "eu"         , "hk"         , "jp"         , "kr"         ,
+          "sg"         , "tw"         , "uk"         , "us"
+        ],
+        "domain_keyword": [
+          "openai"    , "anthropic" , "claude"    , "chatgpt"   , "1e100"     ,
+          "abema"     , "appledaily", "beetalk"   , "blogspot"  , "dropbox"   ,
+          "facebook"  , "fbcdn"     , "github"    , "gmail"     , "google"    ,
+          "instagram" , "sci-hub"   , "spotify"   , "telegram"  , "twitter"   ,
+          "whatsapp"  , "youtube"   , "uk-live"   , "1drv"      , "onedrive"  ,
+          "apple"     , "microsoft" , "ttvnw"
+        ],
+        "ip_cidr": [
+          "13.32.0.0/15"      , "13.35.0.0/17"      , "18.184.0.0/15"     ,
+          "18.194.0.0/15"     , "18.208.0.0/13"     , "18.232.0.0/14"     ,
+          "52.58.0.0/15"      , "52.74.0.0/16"      , "52.77.0.0/16"      ,
+          "52.84.0.0/15"      , "52.200.0.0/13"     , "54.93.0.0/16"      ,
+          "54.156.0.0/14"     , "54.226.0.0/15"     , "54.230.156.0/22"   ,
+          "31.13.24.0/21"     , "31.13.64.0/18"     , "45.64.40.0/22"     ,
+          "66.220.144.0/20"   , "69.63.176.0/20"    , "69.171.224.0/19"   ,
+          "74.119.76.0/22"    , "103.4.96.0/22"     , "129.134.0.0/17"    ,
+          "157.240.0.0/17"    , "173.252.64.0/18"   , "179.60.192.0/22"   ,
+          "185.60.216.0/22"   , "204.15.20.0/22"    , "74.125.0.0/16"     ,
+          "173.194.0.0/16"    , "120.232.181.162/32", "120.241.147.226/32",
+          "120.253.253.226/32", "120.253.255.162/32", "120.253.255.34/32" ,
+          "120.253.255.98/32" , "180.163.150.162/32", "180.163.150.34/32" ,
+          "180.163.151.162/32", "180.163.151.34/32" , "203.208.39.0/24"   ,
+          "203.208.40.0/24"   , "203.208.41.0/24"   , "203.208.43.0/24"   ,
+          "203.208.50.0/24"   , "220.181.174.162/32", "220.181.174.226/32",
+          "220.181.174.34/32" , "1.201.0.0/24"      , "27.0.236.0/22"     ,
+          "103.27.148.0/22"   , "103.246.56.0/22"   , "110.76.140.0/22"   ,
+          "113.61.104.0/22"   , "103.2.28.0/24"     , "103.2.30.0/23"     ,
+          "119.235.224.0/24"  , "119.235.232.0/24"  , "119.235.235.0/24"  ,
+          "119.235.236.0/23"  , "147.92.128.0/17"   , "203.104.128.0/19"  ,
+          "91.108.0.0/16"     , "109.239.140.0/24"  , "149.154.160.0/20"  ,
+          "18.194.0.0/15"     , "34.224.0.0/12"     , "54.242.0.0/15"     ,
+          "50.22.198.204/30"  , "208.43.122.128/27" , "108.168.174.0/16"  ,
+          "173.192.231.32/27" , "158.85.5.192/27"   , "174.37.243.0/16"   ,
+          "158.85.46.128/27"  , "173.192.222.160/27", "184.173.128.0/17"  ,
+          "158.85.224.160/27" , "75.126.150.0/16"   , "69.171.235.0/16"
+        ],
+        "domain": [
+          "cloud.oracle.com"               ,
+          "steambroadcast.akamaized.net"   ,
+          "steamcommunity-a.akamaihd.net"  ,
+          "steamstore-a.akamaihd.net"      ,
+          "steamusercontent-a.akamaihd.net",
+          "steamuserimages-a.akamaihd.net" ,
+          "steampipe.akamaized.net"
+        ],
+        "outbound": "🚀 节点选择"
+      },
+      {
+        "ip_cidr": [
+          "8.128.0.0/10"    , "8.209.32.0/22"   , "8.209.40.0/21"   ,
+          "8.209.48.0/20"   , "8.210.0.0/16"    , "8.211.64.0/18"   ,
+          "8.211.128.0/20"  , "8.211.144.0/21"  , "8.211.152.0/22"  ,
+          "8.211.208.0/20"  , "8.211.224.0/19"  , "8.212.0.0/14"    ,
+          "8.216.0.0/13"    , "14.1.112.0/22"   , "45.112.212.0/22" ,
+          "47.52.0.0/16"    , "47.56.0.0/15"    , "47.75.0.0/16"    ,
+          "47.89.0.0/18"    , "47.89.64.0/24"   , "47.89.82.0/23"   ,
+          "47.89.91.0/24"   , "47.89.100.0/23"  , "47.90.0.0/17"    ,
+          "47.91.128.0/17"  , "47.92.0.0/14"    , "47.240.0.0/16"   ,
+          "47.242.0.0/15"   , "47.244.0.0/16"   , "47.246.5.0/24"   ,
+          "47.246.16.0/24"  , "47.246.60.0/23"  , "47.246.65.0/24"  ,
+          "59.82.0.0/20"    , "59.82.240.0/21"  , "59.82.248.0/22"  ,
+          "103.52.76.0/22"  , "103.206.40.0/22" , "110.76.21.0/24"  ,
+          "110.76.23.0/24"  , "112.125.0.0/17"  , "116.251.79.0/24" ,
+          "116.251.80.0/22" , "116.251.84.0/24" , "116.251.88.0/22" ,
+          "116.251.93.0/24" , "116.251.94.0/23" , "116.251.102.0/23",
+          "116.251.104.0/21", "116.251.112.0/21", "116.251.124.0/22",
+          "119.38.208.0/20" , "119.38.224.0/20" , "119.42.224.0/20" ,
+          "140.205.1.0/24"  , "140.205.122.0/24", "149.129.64.0/18" ,
+          "163.181.32.0/22" , "163.181.40.0/24" , "170.33.0.0/22"   ,
+          "198.11.141.0/24" , "198.11.184.0/21" , "205.204.104.0/23",
+          "205.204.117.0/24", "205.204.122.0/23", "205.204.124.0/22",
+          "45.40.192.0/19"  , "49.51.56.0/22"   , "49.51.60.0/23"   ,
+          "49.51.110.0/23"  , "49.51.112.0/20"  , "62.234.0.0/16"   ,
+          "94.191.0.0/17"   , "103.7.28.0/22"   , "109.244.0.0/16"  ,
+          "111.30.128.0/21" , "111.30.136.0/24" , "111.30.139.0/24" ,
+          "111.30.140.0/23" , "115.159.0.0/16"  , "119.28.0.0/18"   ,
+          "119.28.64.0/19"  , "119.28.124.0/23" , "119.28.128.0/20" ,
+          "119.28.164.0/22" , "119.28.168.0/21" , "119.28.176.0/20" ,
+          "119.28.192.0/19" , "119.28.224.0/21" , "119.29.0.0/16"   ,
+          "121.51.0.0/16"   , "129.28.0.0/16"   , "129.204.0.0/16"  ,
+          "129.211.0.0/16"  , "132.232.0.0/16"  , "134.175.0.0/16"  ,
+          "146.56.192.0/18" , "150.109.32.0/19" , "150.109.64.0/20" ,
+          "150.109.96.0/19" , "152.136.0.0/16"  , "162.14.0.0/16"   ,
+          "182.254.0.0/16"  , "188.131.128.0/17", "203.195.128.0/17",
+          "203.205.128.0/20", "203.205.144.0/21", "203.205.158.0/24",
+          "203.205.180.0/22", "203.205.208.0/22", "203.205.212.0/23",
+          "203.205.218.0/23", "203.205.220.0/22", "203.205.248.0/21",
+          "212.64.0.0/17"   , "212.129.128.0/17", "45.113.194.0/23" ,
+          "63.243.252.0/24" , "103.235.44.0/22" , "106.12.0.0/15"   ,
+          "114.28.224.0/20" , "180.76.0.0/16"   , "182.61.0.0/16"   ,
+          "185.10.105.0/24" , "202.46.48.0/20"  , "203.90.238.0/24" ,
+          "43.254.0.0/22"   , "45.249.212.0/22" , "49.4.0.0/17"     ,
+          "103.31.200.0/22" , "103.218.216.0/22", "114.115.128.0/17",
+          "114.116.0.0/16"  , "116.63.128.0/18" , "116.66.184.0/22" ,
+          "117.78.0.0/18"   , "119.3.0.0/16"    , "119.8.32.0/19"   ,
+          "121.36.0.0/17"   , "121.36.128.0/18" , "121.37.0.0/17"   ,
+          "122.112.128.0/17", "139.9.0.0/18"    , "139.9.64.0/19"   ,
+          "139.9.100.0/22"  , "139.9.104.0/21"  , "139.9.112.0/20"  ,
+          "139.9.128.0/18"  , "139.9.192.0/19"  , "139.9.224.0/20"  ,
+          "139.9.240.0/21"  , "139.9.248.0/22"  , "139.159.128.0/19",
+          "139.159.160.0/22", "139.159.164.0/23", "139.159.168.0/21",
+          "139.159.176.0/20", "139.159.192.0/18", "159.138.0.0/18"  ,
+          "159.138.64.0/21" , "159.138.79.0/24" , "159.138.80.0/20" ,
+          "159.138.96.0/20" , "159.138.112.0/21", "159.138.125.0/24",
+          "159.138.128.0/19", "42.186.0.0/16"   , "45.127.128.0/22" ,
+          "45.195.24.0/24"  , "45.253.132.0/22" , "45.253.240.0/22" ,
+          "45.254.48.0/23"  , "59.111.0.0/20"   , "59.111.128.0/17" ,
+          "103.71.120.0/21" , "103.71.128.0/22" , "103.71.196.0/22" ,
+          "103.71.200.0/22" , "103.72.12.0/22"  , "103.72.18.0/23"  ,
+          "103.72.24.0/22"  , "103.72.28.0/23"  , "103.72.38.0/23"  ,
+          "103.72.40.0/23"  , "103.72.44.0/22"  , "103.72.48.0/21"  ,
+          "103.72.128.0/21" , "103.74.24.0/21"  , "103.74.48.0/22"  ,
+          "103.129.252.0/22", "103.131.252.0/22", "103.135.240.0/22",
+          "103.196.64.0/22" , "106.2.32.0/19"   , "106.2.64.0/18"   ,
+          "114.113.196.0/22", "114.113.200.0/22", "115.236.112.0/20",
+          "115.238.76.0/22" , "123.58.160.0/19" , "223.252.192.0/19",
+          "101.198.128.0/18", "101.198.192.0/24", "101.198.194.0/23",
+          "101.198.196.0/22", "101.198.200.0/21", "101.198.208.0/20",
+          "101.199.196.0/22"
+        ],
+        "outbound": "🎯 全球直连"
+      },
+       {
+        "ip_is_private": true,
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "geoip-cn",
+        "outbound": "direct"
       }
-],
-"rule_set":[
-{
-"type": "remote",
-"tag": "cnip",
-"format":"binary",
-"url":"https://github.com/geoip/cn.srs",
-"download_detour":"自动选择"
-},
-{
-"type": "remote",
-"tag": "cnsite",
-"format":"binary",
-"url":"https://github.com/geosite/cn.srs",
-"download_detour":"自动选择"
-}
-],
-"final":"手动选择"
+    ],
+  "rule_set": [
+      {
+        "tag": "geoip-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs",
+        "download_detour": "🚀 节点选择"
+      }
+    ],
+    "auto_detect_interface": true,
+    "final": "🚀 节点选择"
+  },
+  "experimental": {
+    "cache_file": {"enabled": true, "store_fakeip": true},
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui"        : "dashboard"
+    }
+  }
 }
